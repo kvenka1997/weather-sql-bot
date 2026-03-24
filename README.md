@@ -1,2 +1,1 @@
-# Langchain SQL Bot querying on Weather data
-
+# weather-sql-bot
