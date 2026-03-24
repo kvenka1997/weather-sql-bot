@@ -5,17 +5,24 @@ from langchain.chat_models import init_chat_model
 from langchain_community.utilities import SQLDatabase
 from langchain_community.agent_toolkits import SQLDatabaseToolkit
 from langchain.agents import create_agent
+import pandas as pd
+import sqlite3
 
 # Set your API key
 os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 
 @st.cache_resource
 def get_agent():
+    # Initialize the database if it doesn't exist
+    if not os.path.exists('climate.db'):
+        conn = sqlite3.connect('climate.db')
+        conn.close()
+
     # Initialize the model
     model = init_chat_model("gpt-4o-mini",temperature=0.1)
 
     # Configure the database
-    db = SQLDatabase.from_uri("sqlite:///Climate.db")
+    db = SQLDatabase.from_uri("sqlite:///climate.db")
 
     # Add tools for database interaction
     toolkit = SQLDatabaseToolkit(db=db, llm=model)
